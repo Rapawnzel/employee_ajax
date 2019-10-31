@@ -113,35 +113,42 @@
             </div>
           </div>
             <!--Modify Employee Modal-->
-            <div class="modal fade" id="modifyDataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalModify" aria-hidden="true">
+            <div class="modal fade" id="modifyDataModal" tabindex="-1" role="dialog" aria-labelledby="dataModal" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="dataModalModify">View:</h5>
+                      <h5 class="modal-title" id="dataModal">Modify Emp</h5>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal ng-pristine ng-valid" role="form">
-                            <div class="form-group" >
-                              <label class="col-sm-3 control-label" style="display: inline-block">Name</label>
-                              <span class="col-sm-6" id="viewModalName"></span>
+                            <div class="form-group">
+                               <label class="col-sm-3 control-label">Name <sup class="sup-color">*</sup></label>
+                               <div class="col-sm-8">
+                                  <input type="text" placeholder="Employee Name" class="form-control" id="modEmployeeName">
+                               </div>
                             </div>
                             <div class="form-group">
-                              <label class="col-sm-3 control-label" style="display: inline-block">Age</label>
-                              <div class="col-sm-6" id="viewModalAge" style="display: inline-block"></div>
+                               <label class="col-sm-3 control-label">Age <sup class="sup-color">*</sup></label>
+                   
+                               <div class="col-sm-8">
+                                  <input type="number" placeholder="Employee Age" class="form-control" id="modEmployeeAge">
+                               </div>
                             </div>
                             <div class="form-group">
-                              <label class="col-sm-3 control-label" style="display: inline-block">Salary</label>
-                              <div class="col-sm-6" id="viewModalSalary"style="display: inline-block"></div>
-                          </div>
+                               <label class="col-sm-3 control-label">Salary <sup class="sup-color">*</sup></label>
+                               <div class="col-sm-8">
+                                  <input type="number" placeholder="Employee Salary" class="form-control" id="modEmployeeSalary">
+                               </div>
+                           </div>
                         </form>
                     </div>
                     <div class="modal-footer model-grey-color">
-                        <button class="btn btn-danger" data-dismiss="modal"><i class="glyphicon glyphicon-remove" data-dismiss="modal"></i> Close</button>
+                        <button class="btn btn-success" data-dismiss="modal" onclick="modifyEmployee()"><i class="glyphicon glyphicon-floppy-save" data-dismiss="modal"></i> Save</button>
+                        <button class="btn btn-danger" data-dismiss="modal" ><i class="glyphicon glyphicon-remove" data-dismiss="modal"></i> Close</button>
                     </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          
 
       </div>
     <script src="https://code.jquery.com/jquery-3.4.1.js"

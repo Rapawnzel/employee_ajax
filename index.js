@@ -35,7 +35,7 @@ function printEmployee(employeeDatabase){
                 <td id="" >${employee["employee_age"]}</td>
                 <td id="" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <button class="btn btn-info" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#viewDataModal" onclick="viewEmployee(${employee["id"]})"> <i class="fas fa-search"></i> </button>
-                    <button class="btn btn-light" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#modifyDataModal" onclick="modifyEmployee(${employee["id"]})"> <i class="fas fa-pencil-alt"></i></button>
+                    <button class="btn btn-light" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#modifyDataModal")"> <i class="fas fa-pencil-alt"></i></button>
                     <button class="btn btn-danger" type="button" name="options" data-id="${employee["id"]}}" onclick="deleteEmployee(${employee["id"]})"> <i class="fas fa-trash-alt"></i> </button>
                 </td>
                 <td id="" ><input type="hidden" value="${employee["id"]}"</td>
@@ -57,13 +57,32 @@ function deleteEmployee(employeeId){
             "headers" : {"Content-Type": "application/json"},
             "success" : (data) => {
                 let tr =  $(`#row_${employeeId}`); tr.remove()},
-            "error" : (error) => {console.log("error")}
+            "error" : (error) => {console.log("delete KO")}
         })
     }
 }
 
-function modifyEmployee(){
+function modifyEmployee(employeeId){
+    let modifiedEmployee = {
+        "name":$("#modEmployeeName").val(), 
+        "salary":$("#modEmployeeSalary").val(), 
+        "age":$("#modEmployeeAge").val(),
+    };
 
+    let stringModifiedEmployee = JSON.stringify(modifiedEmployee);
+        $.ajax({
+            "type" : "PUT", 
+            "url" : `http://dummy.restapiexample.com/api/v1/update/${employeeId}`,
+            "data" : stringModifiedEmployee,
+            "dataType" : "json",
+            "headers" : {
+            "Content-Type": "application/json",
+            "X-Requested-With" : "XMLHttpRequest"
+            },
+            "success" : (data)  => {/*let tr =  stringModifiedEmployee; tr.append()*/},
+            "error" : (error)  => {console.log("put KO")}
+        });
+    return true;
 }
 
 function printViewEmployee (employeeObject){
@@ -84,11 +103,10 @@ function viewEmployee(idEmployee){
 
 function addEmployee(){
     let newEmployee = {
+        "name":$("#newEmployeeName").val(), 
+        "salary":$("#newEmployeeSalary").val(), 
+        "age":$("#newEmployeeAge").val(),
         "id":"", 
-        "employee_name":$("#newEmployeeName").val(), 
-        "employee_salary":$("#newEmployeeSalary").val(), 
-        "employee_age":$("#newEmployeeAge").val(), 
-        "profile_image":""
     };
         $.ajax({
             "type" : "POST", 
@@ -99,8 +117,8 @@ function addEmployee(){
             "Content-Type": "application/json",
             "X-Requested-With" : "XMLHttpRequest"
             },
-            "success" : (data)  => {console.log(data)},
-            "error" : (error)  => {console.log("error")}
+            "success" : (data)  => {console.log("post OK")},
+            "error" : (error)  => {console.log("post KO")}
         });
         console.log(newEmployee);
     printEmployee(newEmployee);
