@@ -21,41 +21,78 @@ function lookFor() {
     }
   }
 
+function paginate(){
+    
+}
 
 function printEmployee(employeeDatabase){
     for (employee of employeeDatabase){
         $('#users').append(
-            `<tr id=${employee["id"]}>
-                <td id="" ><img src = "https://js-tutorials.com/demos/angular_smarttable_add_edit_demo/user.jpg" class = "img-fluid img-thumbnail" style = "max-width:50px"></div>
-                <td id="" >${employee["employee_name"]}</div>
-                <td id="" >${employee["employee_salary"]}</div>
-                <td id="" >${employee["employee_age"]}</div>
+            `<tr id='row_${employee["id"]}'>
+                <td id="" ><img src = "https://js-tutorials.com/demos/angular_smarttable_add_edit_demo/user.jpg" class = "img-fluid img-thumbnail" style = "max-width:50px"></td>
+                <td id="" >${employee["employee_name"]}</td>
+                <td id="" >${employee["employee_salary"]}</td>
+                <td id="" >${employee["employee_age"]}</td>
                 <td id="" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-info">
-                    <input type="radio" name="options" id="view" autocomplete="off"> <i class="fas fa-search"></i>
-                    </label>
-                    <label class="btn btn-light">
-                    <input type="radio" name="options" id="modify" autocomplete="off"> <i class="fas fa-pencil-alt"></i>
-                    </label>
-                    <label class="btn btn-danger">
-                    <input type="radio" name="options" id="delete" autocomplete="off"> <i class="fas fa-trash-alt"></i>
-                    </label>
+                    <button class="btn btn-info" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#viewDataModal" onclick="viewEmployee(${employee["id"]})"> <i class="fas fa-search"></i> </button>
+                    <button class="btn btn-light" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#modifyDataModal" onclick="modifyEmployee(${employee["id"]})"> <i class="fas fa-pencil-alt"></i></button>
+                    <button class="btn btn-danger" type="button" name="options" data-id="${employee["id"]}}" onclick="deleteEmployee(${employee["id"]})"> <i class="fas fa-trash-alt"></i> </button>
                 </td>
-            </tr>  
+                <td id="" ><input type="hidden" value="${employee["id"]}"</td>
+            </tr>
         `);
     }
-    return true;
+    //Pagination:
+    paginate();
 }
 
-function eraseEmployee(){
+
+function deleteEmployee(employeeId){
+    let option = confirm("Are you sure you want to delete this?");
+    if (option == true) {
+        $.ajax({
+            "type" : "DELETE", 
+            "url" : `http://dummy.restapiexample.com/api/v1/delete/${employeeId}`,
+            "dataType" : "json",
+            "headers" : {"Content-Type": "application/json"},
+            "success" : (data) => {
+                let tr =  $(`#row_${employeeId}`); tr.remove()},
+            "error" : (error) => {console.log("error")}
+        })
+    }
+}
+
+function modifyEmployee(){
 
 }
+
+function printViewEmployee (employeeObject){
+    $(`#viewModalName`).html(employeeObject["employee_name"]);
+    $(`#viewModalAge`).html(employeeObject["employee_age"]);
+    $(`#viewModalSalary`).html(employeeObject["employee_salary"]);
+}
+
+
+function viewEmployee(idEmployee){
+    $.get({
+        "url" : `http://dummy.restapiexample.com/api/v1/employee/${idEmployee}`,
+        "success" : (data) => {printViewEmployee(data)},
+        "dataType" : "json"
+        });
+};
+
 
 function addEmployee(){
-    let newEmployee = `[{"id":"","employee_name":${$("#newEmployeeName")},"employee_salary":${$("#newEmployeeSalary")},"employee_age":${$("#newEmployeeAge")},"profile_image":""}]`;
+    let newEmployee = {
+        "id":"", 
+        "employee_name":$("#newEmployeeName").val(), 
+        "employee_salary":$("#newEmployeeSalary").val(), 
+        "employee_age":$("#newEmployeeAge").val(), 
+        "profile_image":""
+    };
         $.ajax({
             "type" : "POST", 
-            "url" : "https://cors-anywhere.herokuapp.com/https://employees3.free.beeceptor.com",
+            "url" : "http://dummy.restapiexample.com/api/v1/create",
             "data" : JSON.stringify(newEmployee),
             "dataType" : "json",
             "headers" : {
@@ -63,8 +100,9 @@ function addEmployee(){
             "X-Requested-With" : "XMLHttpRequest"
             },
             "success" : (data)  => {console.log(data)},
-            "error" : (error)  => {console.log(error)}
+            "error" : (error)  => {console.log("error")}
         });
+        console.log(newEmployee);
     printEmployee(newEmployee);
     return true;
 }
@@ -72,13 +110,14 @@ function addEmployee(){
 function main(){
     $.ajax({
         "type" : "GET", 
-        "url" : "https://cors-anywhere.herokuapp.com/https://employees3.free.beeceptor.com",
+        "url" : "http://dummy.restapiexample.com/api/v1/employees",
         "dataType" : "json",
         "headers" : {"Content-Type": "application/json"},
         "success" : (database) => {printEmployee(database)},
-        "error" : (error) => {console.log(error)}
+        "error" : (error) => {console.log("first get KO")}
     });
 
 }
 
-$(document).ready(main());
+
+main();
