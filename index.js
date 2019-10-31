@@ -35,7 +35,7 @@ function printEmployee(employeeDatabase){
                 <td id="" >${employee["employee_age"]}</td>
                 <td id="" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <button class="btn btn-info" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#viewDataModal" onclick="viewEmployee(${employee["id"]})"> <i class="fas fa-search"></i> </button>
-                    <button class="btn btn-light" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#modifyDataModal")"> <i class="fas fa-pencil-alt"></i></button>
+                    <button class="btn btn-light" type="button" name="options" data-id="${employee["id"]}" data-toggle="modal" data-target="#modifyDataModal"onclick="modifyEmployee(${employee["id"]})"> <i class="fas fa-pencil-alt"></i></button>
                     <button class="btn btn-danger" type="button" name="options" data-id="${employee["id"]}}" onclick="deleteEmployee(${employee["id"]})"> <i class="fas fa-trash-alt"></i> </button>
                 </td>
                 <td id="" ><input type="hidden" value="${employee["id"]}"</td>
@@ -62,8 +62,47 @@ function deleteEmployee(employeeId){
     }
 }
 
+function showInModal (employeeObject){
+    console.log("show Ok")
+    $("#modEmployeeName").val(employeeObject[`employee_name`]);
+    $("#modEmployeeSalary").val(employeeObject[`employee_salary`]);
+    $("#modEmployeeAge").val(employeeObject[`employee_age`]);
+}
+
+
 function modifyEmployee(employeeId){
-    let modifiedEmployee = {
+
+    $.get({
+        "url" : `http://dummy.restapiexample.com/api/v1/employee/${employeeId}`,
+        "success" : (data) => {showInModal(data)},
+        "dataType" : "json"
+        });
+
+    $("#modifyButton").click(function() {
+        let modifiedEmployee = {
+            "name":$("#modEmployeeName").val(), 
+            "salary":$("#modEmployeeSalary").val(), 
+            "age":$("#modEmployeeAge").val(),
+        };
+    
+        let stringModifiedEmployee = JSON.stringify(modifiedEmployee);
+            $.ajax({
+                "type" : "PUT", 
+                "url" : `http://dummy.restapiexample.com/api/v1/update/${employeeId}`,
+                "data" : stringModifiedEmployee,
+                "dataType" : "json",
+                "headers" : {
+                "Content-Type": "application/json",
+                "X-Requested-With" : "XMLHttpRequest"
+                },
+                "success" : (data)  => {console.log("put OK")},
+                "error" : (error)  => {console.log("put KO")}
+            });
+    });
+
+    
+
+    /*let modifiedEmployee = {
         "name":$("#modEmployeeName").val(), 
         "salary":$("#modEmployeeSalary").val(), 
         "age":$("#modEmployeeAge").val(),
@@ -79,9 +118,9 @@ function modifyEmployee(employeeId){
             "Content-Type": "application/json",
             "X-Requested-With" : "XMLHttpRequest"
             },
-            "success" : (data)  => {/*let tr =  stringModifiedEmployee; tr.append()*/},
+            "success" : (data)  => {let tr =  stringModifiedEmployee; tr.append()},
             "error" : (error)  => {console.log("put KO")}
-        });
+        });*/
     return true;
 }
 
